@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 public class ChatService extends AbstractChatService {
 
     @Override
-    protected void doMessageResponse(ChatProcessAggregate chatProcess, ResponseBodyEmitter emitter) throws JsonProcessingException {
+    protected void doMessageResponse(ChatProcessAggregate chatProcess, ResponseBodyEmitter emitter, HttpServletResponse response) throws JsonProcessingException {
         // 1. 请求消息
         List<Message> messages = chatProcess.getMessages().stream()
                 .map(entity -> Message.builder()
@@ -66,6 +67,7 @@ public class ChatService extends AbstractChatService {
                     // 发送信息
                     try {
                         emitter.send(delta.getContent());
+                        response.flushBuffer();
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }

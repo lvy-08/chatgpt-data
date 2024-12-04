@@ -25,12 +25,16 @@ chatgpt:
   sdk:
     config:
       # 官网地址 https://api.openai.com/
-      api-host: https://api.xfg.im/b8b6/
+      api-host: https://api.openai.com/
       # 官网申请 https://platform.openai.com/account/api-keys
-      api-key: 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
+      api-key: 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
       # 自主申请 http://api.xfg.im:8080/authorize?username=xfg&password=123 - 有时效性，主要为了大家学习使用
       auth-token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ4ZmciLCJleHAiOjE2OTAwMzI5MDQsImlhdCI6MTY5MDAyOTMwNCwianRpIjoiOTBkNzc5NjYtOWM5MS00MGVmLWJmNjktNzYzNDljNmUyMDkyIiwidXNlcm5hbWUiOiJ4ZmcifQ.x7P6Rc249SgbxpqWhgKahYP8A8AllNI_26DV08a1AZs
-
+wx:
+  config:
+    originalid: gh_921349cd1dd5
+    appid: wx42655b60199b097a
+    token: b8b6
 # 日志
 logging:
   level:

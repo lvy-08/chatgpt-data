@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Fuzhengwei bugstack.cn @小傅哥
@@ -22,7 +23,7 @@ public abstract class AbstractChatService implements IChatService {
     protected OpenAiSession openAiSession;
 
     @Override
-    public ResponseBodyEmitter completions(ChatProcessAggregate chatProcess) {
+    public ResponseBodyEmitter completions(ChatProcessAggregate chatProcess, HttpServletResponse response) {
         // 1. 校验权限
         if (!"b8b6".equals(chatProcess.getToken())) {
             throw new ChatGPTException(Constants.ResponseCode.TOKEN_ERROR.getCode(), Constants.ResponseCode.TOKEN_ERROR.getInfo());
@@ -38,7 +39,7 @@ public abstract class AbstractChatService implements IChatService {
 
         // 3. 应答处理
         try {
-            this.doMessageResponse(chatProcess, emitter);
+            this.doMessageResponse(chatProcess, emitter,response);
         } catch (Exception e) {
             throw new ChatGPTException(Constants.ResponseCode.UN_ERROR.getCode(), Constants.ResponseCode.UN_ERROR.getInfo());
         }
@@ -47,6 +48,6 @@ public abstract class AbstractChatService implements IChatService {
         return emitter;
     }
 
-    protected abstract void doMessageResponse(ChatProcessAggregate chatProcess, ResponseBodyEmitter responseBodyEmitter) throws JsonProcessingException;
+    protected abstract void doMessageResponse(ChatProcessAggregate chatProcess, ResponseBodyEmitter responseBodyEmitter,HttpServletResponse response) throws JsonProcessingException;
 
 }

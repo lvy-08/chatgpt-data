@@ -52,7 +52,7 @@ public class ChatGPTAIServiceController {
             // 1. 基础配置；流式输出、编码、禁用缓存
             response.setContentType("text/event-stream");
             response.setCharacterEncoding("UTF-8");
-            response.setHeader("Cache-Control", "no-cache");
+            //response.setHeader("Cache-Control", "no-cache");
 
             // 2. 构建参数
             ChatProcessAggregate chatProcessAggregate = ChatProcessAggregate.builder()
@@ -68,7 +68,7 @@ public class ChatGPTAIServiceController {
                     .build();
 
             // 3. 请求结果&返回
-            return chatService.completions(chatProcessAggregate);
+            return chatService.completions(chatProcessAggregate,response);
         } catch (Exception e) {
             log.error("流式应答，请求模型：{} 发生异常", request.getModel(), e);
             throw new ChatGPTException(e.getMessage());
