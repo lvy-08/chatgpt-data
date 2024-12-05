@@ -3,7 +3,9 @@ package cn.bug.chatgpt.data.trigger.http;
 import cn.bug.chatgpt.data.domain.openai.model.aggregates.ChatProcessAggregate;
 import cn.bug.chatgpt.data.domain.openai.model.entity.MessageEntity;
 import cn.bug.chatgpt.data.domain.openai.service.IChatService;
+import cn.bug.chatgpt.data.domain.auth.service.IAuthService;
 import cn.bug.chatgpt.data.trigger.http.dto.ChatGPTRequestDTO;
+import cn.bug.chatgpt.data.types.common.Constants;
 import cn.bug.chatgpt.data.types.exception.ChatGPTException;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.stream.Collectors;
 
 /**
@@ -27,6 +30,10 @@ public class ChatGPTAIServiceController {
 
     @Resource
     private IChatService chatService;
+
+    @Resource
+    private IAuthService authService;
+
 
     /**
      * 流式问题，ChatGPT 请求接口
@@ -53,6 +60,21 @@ public class ChatGPTAIServiceController {
             response.setContentType("text/event-stream");
             response.setCharacterEncoding("UTF-8");
             //response.setHeader("Cache-Control", "no-cache");
+
+            // 2. 构建异步响应对象【对 Token 过期拦截】
+            ResponseBodyEmitter emitter = new ResponseBodyEmitter(3 * 60 * 1000L);
+            boolean success = authService.checkToken(token);
+
+            if (!success) {
+                try {
+                    emitter.send(Constants.ResponseCode.TOKEN_ERROR.getCode());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                emitter.complete();
+                return emitter;
+            }
+
 
             // 2. 构建参数
             ChatProcessAggregate chatProcessAggregate = ChatProcessAggregate.builder()

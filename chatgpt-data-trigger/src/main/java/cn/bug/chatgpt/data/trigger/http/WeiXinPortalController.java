@@ -20,7 +20,7 @@ import java.util.Date;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/${app.config.api-version}/wx/portal/{appid}")
+@RequestMapping("/wx/portal/{appid}")
 public class WeiXinPortalController {
 
     @Value("${wx.config.originalid}")

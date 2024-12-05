@@ -24,10 +24,6 @@ public abstract class AbstractChatService implements IChatService {
 
     @Override
     public ResponseBodyEmitter completions(ChatProcessAggregate chatProcess, HttpServletResponse response) {
-        // 1. 校验权限
-        if (!"b8b6".equals(chatProcess.getToken())) {
-            throw new ChatGPTException(Constants.ResponseCode.TOKEN_ERROR.getCode(), Constants.ResponseCode.TOKEN_ERROR.getInfo());
-        }
 
         // 2. 请求应答
         ResponseBodyEmitter emitter = new ResponseBodyEmitter(3 * 60 * 1000L);

@@ -68,6 +68,7 @@ public class ChatService extends AbstractChatService {
                     try {
                         emitter.send(delta.getContent());
                         response.flushBuffer();
+                        Thread.sleep(10); // 模拟逐步生成和发送
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
