@@ -1,1 +1,1 @@
-docker build -f ./Dockerfile -t fuzhengwei/chatgpt-data-app:1.1 .
+docker build --progress=plain -f ./Dockerfile -t halfhalf/chatgpt-data-app:1.1 .

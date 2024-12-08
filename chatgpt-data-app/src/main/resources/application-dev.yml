@@ -27,7 +27,7 @@ chatgpt:
       # 官网地址 https://api.openai.com/
       api-host: https://api.openai.com/
       # 官网申请 https://platform.openai.com/account/api-keys
-      api-key: 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
+      api-key: ...
       # 自主申请 http://api.xfg.im:8080/authorize?username=xfg&password=123 - 有时效性，主要为了大家学习使用
       auth-token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ4ZmciLCJleHAiOjE2OTAwMzI5MDQsImlhdCI6MTY5MDAyOTMwNCwianRpIjoiOTBkNzc5NjYtOWM5MS00MGVmLWJmNjktNzYzNDljNmUyMDkyIiwidXNlcm5hbWUiOiJ4ZmcifQ.x7P6Rc249SgbxpqWhgKahYP8A8AllNI_26DV08a1AZs
 wx:
