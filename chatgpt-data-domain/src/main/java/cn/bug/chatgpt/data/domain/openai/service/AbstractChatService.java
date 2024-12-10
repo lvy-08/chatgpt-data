@@ -1,6 +1,9 @@
 package cn.bug.chatgpt.data.domain.openai.service;
 
 import cn.bug.chatgpt.data.domain.openai.model.aggregates.ChatProcessAggregate;
+import cn.bug.chatgpt.data.domain.openai.model.entity.RuleLogicEntity;
+import cn.bug.chatgpt.data.domain.openai.model.valobj.LogicCheckTypeVO;
+import cn.bug.chatgpt.data.domain.openai.service.rule.factory.DefaultLogicFactory;
 import cn.bug.chatgpt.data.types.common.Constants;
 import cn.bug.chatgpt.data.types.exception.ChatGPTException;
 import cn.bug.chatgpt.session.OpenAiSession;
@@ -35,6 +38,18 @@ public abstract class AbstractChatService implements IChatService {
 
         // 3. 应答处理
         try {
+            // 2. 规则过滤
+            RuleLogicEntity<ChatProcessAggregate> ruleLogicEntity = this.doCheckLogic(chatProcess,
+                    DefaultLogicFactory.LogicModel.ACCESS_LIMIT.getCode(),
+                    DefaultLogicFactory.LogicModel.SENSITIVE_WORD.getCode());
+
+            if (!LogicCheckTypeVO.SUCCESS.equals(ruleLogicEntity.getType())) {
+                emitter.send(ruleLogicEntity.getInfo());
+                emitter.complete();
+                return emitter;
+            }
+
+
             this.doMessageResponse(chatProcess, emitter,response);
         } catch (Exception e) {
             throw new ChatGPTException(Constants.ResponseCode.UN_ERROR.getCode(), Constants.ResponseCode.UN_ERROR.getInfo());
@@ -44,6 +59,8 @@ public abstract class AbstractChatService implements IChatService {
         return emitter;
     }
 
+    protected abstract RuleLogicEntity<ChatProcessAggregate> doCheckLogic(ChatProcessAggregate chatProcess, String... logics) throws Exception;
     protected abstract void doMessageResponse(ChatProcessAggregate chatProcess, ResponseBodyEmitter responseBodyEmitter,HttpServletResponse response) throws JsonProcessingException;
+
 
 }

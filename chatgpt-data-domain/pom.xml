@@ -63,6 +63,12 @@
             <artifactId>xstream</artifactId>
             <version>1.4.18</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.houbb/sensitive-word -->
+        <dependency>
+            <groupId>com.github.houbb</groupId>
+            <artifactId>sensitive-word</artifactId>
+            <version>0.8.0</version>
+        </dependency>
         <dependency>
             <groupId>cn.bug.chatgpt</groupId>
             <artifactId>chatgpt-sdk</artifactId>

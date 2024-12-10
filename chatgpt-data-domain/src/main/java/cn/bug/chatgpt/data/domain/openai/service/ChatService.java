@@ -2,6 +2,10 @@ package cn.bug.chatgpt.data.domain.openai.service;
 
 import cn.bug.chatgpt.common.Constants;
 import cn.bug.chatgpt.data.domain.openai.model.aggregates.ChatProcessAggregate;
+import cn.bug.chatgpt.data.domain.openai.model.entity.RuleLogicEntity;
+import cn.bug.chatgpt.data.domain.openai.model.valobj.LogicCheckTypeVO;
+import cn.bug.chatgpt.data.domain.openai.service.rule.ILogicFilter;
+import cn.bug.chatgpt.data.domain.openai.service.rule.factory.DefaultLogicFactory;
 import cn.bug.chatgpt.domain.chat.ChatChoice;
 import cn.bug.chatgpt.domain.chat.ChatCompletionRequest;
 import cn.bug.chatgpt.domain.chat.ChatCompletionResponse;
@@ -16,8 +20,10 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -27,6 +33,21 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ChatService extends AbstractChatService {
+
+    @Resource
+    private DefaultLogicFactory logicFactory;
+
+    @Override
+    protected RuleLogicEntity<ChatProcessAggregate> doCheckLogic(ChatProcessAggregate chatProcess, String... logics) throws Exception {
+        Map<String, ILogicFilter> logicFilterMap = logicFactory.openLogicFilter();
+        RuleLogicEntity<ChatProcessAggregate> entity = null;
+        for (String code : logics) {
+            entity = logicFilterMap.get(code).filter(chatProcess);
+            if (!LogicCheckTypeVO.SUCCESS.equals(entity.getType())) return entity;
+        }
+        return entity != null ? entity : RuleLogicEntity.<ChatProcessAggregate>builder()
+                .type(LogicCheckTypeVO.SUCCESS).data(chatProcess).build();
+    }
 
     @Override
     protected void doMessageResponse(ChatProcessAggregate chatProcess, ResponseBodyEmitter emitter, HttpServletResponse response) throws JsonProcessingException {
