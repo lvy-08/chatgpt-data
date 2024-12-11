@@ -31,7 +31,7 @@ chatgpt:
       # 官网地址 https://api.openai.com/
       api-host: https://api.openai.com/
       # 官网申请 https://platform.openai.com/account/api-keys
-      api-key: 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
+      api-key: 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
       # 自主申请 http://api.xfg.im:8080/authorize?username=xfg&password=123 - 有时效性，主要为了大家学习使用
       auth-token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ4ZmciLCJleHAiOjE2OTAwMzI5MDQsImlhdCI6MTY5MDAyOTMwNCwianRpIjoiOTBkNzc5NjYtOWM5MS00MGVmLWJmNjktNzYzNDljNmUyMDkyIiwidXNlcm5hbWUiOiJ4ZmcifQ.x7P6Rc249SgbxpqWhgKahYP8A8AllNI_26DV08a1AZs
 wx:
