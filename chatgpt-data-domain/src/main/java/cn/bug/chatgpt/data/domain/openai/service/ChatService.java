@@ -3,6 +3,7 @@ package cn.bug.chatgpt.data.domain.openai.service;
 import cn.bug.chatgpt.common.Constants;
 import cn.bug.chatgpt.data.domain.openai.model.aggregates.ChatProcessAggregate;
 import cn.bug.chatgpt.data.domain.openai.model.entity.RuleLogicEntity;
+import cn.bug.chatgpt.data.domain.openai.model.entity.UserAccountQuotaEntity;
 import cn.bug.chatgpt.data.domain.openai.model.valobj.LogicCheckTypeVO;
 import cn.bug.chatgpt.data.domain.openai.service.rule.ILogicFilter;
 import cn.bug.chatgpt.data.domain.openai.service.rule.factory.DefaultLogicFactory;
@@ -38,11 +39,12 @@ public class ChatService extends AbstractChatService {
     private DefaultLogicFactory logicFactory;
 
     @Override
-    protected RuleLogicEntity<ChatProcessAggregate> doCheckLogic(ChatProcessAggregate chatProcess, String... logics) throws Exception {
-        Map<String, ILogicFilter> logicFilterMap = logicFactory.openLogicFilter();
+    protected RuleLogicEntity<ChatProcessAggregate> doCheckLogic(ChatProcessAggregate chatProcess, UserAccountQuotaEntity userAccountQuotaEntity, String... logics) throws Exception {
+        Map<String, ILogicFilter<UserAccountQuotaEntity>> logicFilterMap = logicFactory.openLogicFilter();
         RuleLogicEntity<ChatProcessAggregate> entity = null;
         for (String code : logics) {
-            entity = logicFilterMap.get(code).filter(chatProcess);
+            if (DefaultLogicFactory.LogicModel.NULL.getCode().equals(code)) continue;
+            entity = logicFilterMap.get(code).filter(chatProcess,userAccountQuotaEntity);
             if (!LogicCheckTypeVO.SUCCESS.equals(entity.getType())) return entity;
         }
         return entity != null ? entity : RuleLogicEntity.<ChatProcessAggregate>builder()

@@ -36,10 +36,11 @@ public class ChatGPTAIServiceController {
 
 
     /**
+     * 【apix.natapp1.cc 是我在 <a href="https://natapp.cn/">https://natapp.cn</a> 购买的渠道，你需要自己购买一个使用】
      * 流式问题，ChatGPT 请求接口
      * <p>
      * curl -X POST \
-     * http://localhost:8090/api/v1/chat/completions \
+     * http://apix.natapp1.cc/api/v1/chatgpt/chat/completions \
      * -H 'Content-Type: application/json;charset=utf-8' \
      * -H 'Authorization: b8b6' \
      * -d '{
@@ -51,7 +52,22 @@ public class ChatGPTAIServiceController {
      * ],
      * "model": "gpt-3.5-turbo"
      * }'
+     * <p>
+     * curl -X POST \
+     * http://localhost:8091/api/v1/chatgpt/chat/completions \
+     * -H 'Content-Type: application/json;charset=utf-8' \
+     * -H 'Authorization: b8b6' \
+     * -d '{
+     * "messages": [
+     * {
+     * "content": "1+1",
+     * "role": "user"
+     * }
+     * ],
+     * "model": "gpt-3.5-turbo"
+     * }'
      */
+
     @RequestMapping(value = "chat/completions", method = RequestMethod.POST)
     public ResponseBodyEmitter completionsStream(@RequestBody ChatGPTRequestDTO request, @RequestHeader("Authorization") String token, HttpServletResponse response) {
         log.info("流式问答请求开始，使用模型：{} 请求信息：{}", request.getModel(), JSON.toJSONString(request.getMessages()));
